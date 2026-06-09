@@ -6,17 +6,17 @@ namespace Alura\Mvc\Entity;
 
 class Video
 {
-    public string $url;
-    public int $id;
-    public string $title;
+    public readonly int $id;
+    public readonly string $url;
 
-    public function __construct(string $url, string $title)
-    {
+    public function __construct(
+        string $url,
+        public readonly string $title,
+    ) {
         $this->setUrl($url);
-        $this->title = $title;
     }
 
-    private function setUrl(string $url): void
+    private function setUrl(string $url)
     {
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             throw new \InvalidArgumentException();
