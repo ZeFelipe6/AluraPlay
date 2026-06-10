@@ -8,3 +8,5 @@ interface Controller
 {
     public function processaRequisicao(): void;
 }
+
+
