@@ -8,7 +8,7 @@ class LoginController implements Controller
 {
     private \PDO $pdo;
 
-    public function __construct(?\Alura\Mvc\Repository\VideoRepository $videoRepository = null)
+    public function __construct()
     {
         $dbPath = __DIR__ . '/../../banco.sqlite';
         $this->pdo = new \PDO("sqlite:$dbPath");
@@ -19,13 +19,20 @@ class LoginController implements Controller
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = filter_input(INPUT_POST, 'password');
 
-        $statement = $this->pdo->prepare('SELECT * FROM users WHERE email = ?');
+        $sql = 'SELECT * FROM users WHERE email = ?';
+        $statement = $this->pdo->prepare($sql);
         $statement->bindValue(1, $email);
         $statement->execute();
 
         $userData = $statement->fetch(\PDO::FETCH_ASSOC);
+        $correctPassword = password_verify($password, $userData['password'] ?? '');
 
-        $correctPassword = $userData && password_verify((string) $password, $userData['password'] ?? '');
+        if (password_needs_rehash($userData['password'], PASSWORD_ARGON2ID)){
+            $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?');
+            $statement->bindValue(1, password_hash($password, PASSWORD_ARGON2ID));
+            $statement->bindvalue(2, $userData['id']);
+            $statement->execute();
+        }
 
         if ($correctPassword) {
             $_SESSION['logado'] = true;
