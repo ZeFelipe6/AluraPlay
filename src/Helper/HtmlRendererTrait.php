@@ -13,7 +13,7 @@ trait HtmlRendererTrait
         extract($context);
 
         ob_start();
-        require_once $templatePath . $templateName . 'php';
+        require_once $templatePath . $templateName . '.php';
         return ob_get_clean();
     }
 }

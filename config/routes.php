@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Alura\Mvc\Controller\NewJsonVideoController;
-
 return [
     'GET|/' => \Alura\Mvc\Controller\VideoListController::class,
     'GET|/novo-video' => \Alura\Mvc\Controller\VideoFormController::class,
