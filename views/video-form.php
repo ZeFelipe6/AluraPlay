@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/inicio-html.php';
+$this->layout('layout');
 /** @var \Alura\Mvc\Entity\Video|null $video */
 ?>
 <main class="container">
@@ -36,9 +36,20 @@ require_once __DIR__ . '/inicio-html.php';
                    id='image' />
         </div>
 
+        <?php if ($video?->getFilePath() !== null): ?>
+        <div class="formulario__campo">
+            <label class="campo__etiqueta">
+                <input name="remove_image"
+                       type="checkbox"
+                       value="1" />
+                Remover imagem atual
+            </label>
+            <img src="/public/img/uploads/<?= $video->getFilePath(); ?>"
+                 alt=""
+                 style="max-width: 240px; width: 100%; display: block; margin-top: 8px;" />
+        </div>
+        <?php endif; ?>
+
         <input class="formulario__botao" type="submit" value="Enviar" />
     </form>
 </main>
-
-<?php
-require_once __DIR__ . '/fim-html.php';

@@ -41,7 +41,7 @@ class VideoRepository
     public function update(Video $video): bool
     {
         $updateImageSql = '';
-        if ($video->getFilePath() !== null) {
+        if ($video->filePathChanged()) {
             $updateImageSql = ', image_path = :image_path';
         }
         $sql = "UPDATE videos SET
@@ -55,7 +55,7 @@ class VideoRepository
         $statement->bindValue(':title', $video->title);
         $statement->bindValue(':id', $video->id, PDO::PARAM_INT);
 
-        if ($video->getFilePath() !== null) {
+        if ($video->filePathChanged()) {
             $statement->bindValue(':image_path', $video->getFilePath());
         }
 
@@ -91,7 +91,7 @@ class VideoRepository
         $video->setId($videoData['id']);
 
         if ($videoData['image_path'] !== null) {
-            $video->setFilePath($videoData['image_path']);
+            $video->loadFilePath($videoData['image_path']);
         }
 
         return $video;

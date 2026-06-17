@@ -23,7 +23,7 @@ class JsonVideoListController implements RequestHandlerInterface
             return [
                 'url' => $video->url,
                 'title' => $video->title,
-                'file_path' => $video->getFilePath() === null ? null : '/img/uploads/' . $video->getFilePath(),
+                'file_path' => $video->getFilePath() === null ? null : '/public/img/uploads/' . $video->getFilePath(),
             ];
         }, $this->videoRepository->all());
 

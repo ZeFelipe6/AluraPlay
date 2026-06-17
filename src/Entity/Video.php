@@ -9,6 +9,7 @@ class Video
     public readonly int $id;
     public readonly string $url;
     private ?string $filePath = null;
+    private bool $filePathChanged = false;
 
     public function __construct(
         string $url,
@@ -34,10 +35,28 @@ class Video
     public function setFilePath(string $filePath): void
     {
         $this->filePath = $filePath;
+        $this->filePathChanged = true;
+    }
+
+    public function loadFilePath(string $filePath): void
+    {
+        $this->filePath = $filePath;
+        $this->filePathChanged = false;
+    }
+
+    public function removeFilePath(): void
+    {
+        $this->filePath = null;
+        $this->filePathChanged = true;
     }
 
     public function getFilePath(): ?string
     {
         return $this->filePath;
+    }
+
+    public function filePathChanged(): bool
+    {
+        return $this->filePathChanged;
     }
 }

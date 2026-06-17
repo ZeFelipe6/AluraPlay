@@ -31,6 +31,7 @@ class EditVideoController implements RequestHandlerInterface
                 'Location' => '/'
             ]);
         }
+        $currentVideo = $this->videoRepository->find($id);
 
         $requestBody = $request->getParsedBody();
         $url = filter_var($requestBody['url'], FILTER_VALIDATE_URL);
@@ -50,6 +51,10 @@ class EditVideoController implements RequestHandlerInterface
 
         $video = new Video($url, $titulo);
         $video->setId($id);
+        $removeImage = array_key_exists('remove_image', $requestBody);
+        if ($removeImage) {
+            $video->removeFilePath();
+        }
 
         $files = $request->getUploadedFiles();
         /** @var UploadedFileInterface $uploadedImage */
@@ -73,6 +78,13 @@ class EditVideoController implements RequestHandlerInterface
             return new Response(302, [
                 'Location' => '/'
             ]);
+        }
+
+        if ($video->filePathChanged() && $currentVideo->getFilePath() !== null) {
+            $previousImagePath = __DIR__ . '/../../public/img/uploads/' . $currentVideo->getFilePath();
+            if (is_file($previousImagePath)) {
+                unlink($previousImagePath);
+            }
         }
 
         return new Response(302, [
